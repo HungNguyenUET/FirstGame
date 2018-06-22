@@ -1,0 +1,11 @@
+.idea
+.settings
+Assests
+frameworks
+simulator
+.cocos-project.json
+config.json
+.project
+HelloJavascript.iml
+jsb.sqlite
+manifest.webapp
