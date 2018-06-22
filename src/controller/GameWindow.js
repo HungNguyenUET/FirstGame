@@ -2,7 +2,6 @@
  * Created by CPU11084_LOCAL on 6/22/2018.
  */
 var GameWindow = cc.Layer.extend({
-    _fire: null,
 
     ctor:function(){
         this._super();
@@ -10,9 +9,31 @@ var GameWindow = cc.Layer.extend({
     },
 
     init:function(){
+        cc.spriteFrameCache.addSpriteFrames("res/fire1.plist");
         this.initBackground();
+        MW.CONTAINER.FIRES = [];
         winSize = cc.director.getWinSize();
         this.schedule(this.update, 2);
+        this.addTouchListener()
+    },
+
+    addTouchListener: function() {
+        var self = this;
+        cc.eventManager.addListener({
+            event: cc.EventListener.TOUCH_ONE_BY_ONE,
+            onTouchBegan: function(touch, event){
+                var location = touch.getLocation();
+                cc.log(location.x);
+                cc.log(location.y);
+                for(i = 0; i < MW.CONTAINER.FIRES.length; i++){
+                    if(self.isTouch(MW.CONTAINER.FIRES[i], location)){
+                        MW.CONTAINER.FIRES[i].x = -100;
+                        return true;
+                    }
+                }
+                return true;
+            }
+        }, this);
     },
 
     initBackground: function(){
@@ -26,18 +47,17 @@ var GameWindow = cc.Layer.extend({
 
     update:function(){
         cc.log("----- UPDATE -----");
-        this.makeFire();
+        var newFire = Fire.createFire();
+        this.addChild(newFire);
+
     },
 
-    makeFire:function(){
-        this._fire = new cc.Sprite("res/animation_0/00.png");
-        this._fire.attr({
-            anchorX: 0,
-            anchorY: 0,
-            x: Math.random()*winSize.width,
-            y: Math.random()*winSize.height
-        });
-        this.addChild(this._fire);
+    isTouch:function(fire, location){
+        if(location.x > fire.x && location.x < (fire.x + fire.width) &&
+            location.y > fire.y && location.y < (fire.y + fire.height)){
+            cc.log("--- TOUCH ---");
+            return true;
+        }
     }
 });
 
