@@ -18,7 +18,8 @@
         "src/**/*.js"
     ],
     "jsList": [
-        "src/model/Ant.js",
+        "src/GameConfig.js",
+        "src/model/Fire.js",
         "src/controller/GameWindow.js",
         "src/data/Resource.js",
         "src/data/ResourceAnimation.js",
