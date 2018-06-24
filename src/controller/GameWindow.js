@@ -2,18 +2,20 @@
  * Created by CPU11084_LOCAL on 6/22/2018.
  */
 var GameWindow = cc.Layer.extend({
-
+    count: 0,
     ctor:function(){
         this._super();
         this.init();
     },
 
     init:function(){
+        this.count = 1;
         cc.spriteFrameCache.addSpriteFrames("res/fire1.plist");
+        cc.spriteFrameCache.addSpriteFrames("res/fire2.plist");
         this.initBackground();
         MW.CONTAINER.FIRES = [];
         winSize = cc.director.getWinSize();
-        this.schedule(this.update, 2);
+        this.schedule(this.update, 1);
         this.addTouchListener()
     },
 
@@ -27,7 +29,7 @@ var GameWindow = cc.Layer.extend({
                 cc.log(location.y);
                 for(i = 0; i < MW.CONTAINER.FIRES.length; i++){
                     if(self.isTouch(MW.CONTAINER.FIRES[i], location)){
-                        MW.CONTAINER.FIRES[i].x = -100;
+                        MW.CONTAINER.FIRES[i].y = -100;
                         return true;
                     }
                 }
@@ -47,9 +49,26 @@ var GameWindow = cc.Layer.extend({
 
     update:function(){
         cc.log("----- UPDATE -----");
-        var newFire = Fire.createFire();
+        var newFire;
+        if(this.count % 6 == 0){
+            newFire = Fire.createFire(2);
+        }else{
+            newFire = Fire.createFire(1);
+        }
+        this.count++;
+        this.updateUI();
         this.addChild(newFire);
+    },
 
+    updateUI:function(){
+        var i;
+        for(i = 0; i < MW.CONTAINER.FIRES.length; i++){
+            var currentFire = MW.CONTAINER.FIRES[i];
+            if(currentFire.x > winSize.width || currentFire.x < 0){
+                currentFire.speech *= -1;
+            }
+            currentFire.x += currentFire.speech;
+        }
     },
 
     isTouch:function(fire, location){
