@@ -4,5 +4,6 @@
 var MW = MW || {};
 
 MW.CONTAINER = {
-  FIRES:[]
+  FIRES:[],
+  SCORE:0
 };
