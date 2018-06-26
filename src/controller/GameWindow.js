@@ -3,6 +3,8 @@
  */
 var GameWindow = cc.Layer.extend({
     count: 0,
+    score: null,
+    tmpScore:0,
     ctor:function(){
         this._super();
         this.init();
@@ -15,7 +17,18 @@ var GameWindow = cc.Layer.extend({
         this.initBackground();
         MW.CONTAINER.FIRES = [];
         winSize = cc.director.getWinSize();
+        this.score = new cc.LabelBMFont("Score: 0", "res/arial-14.fnt");
+        this.score.attr({
+            anchorX: 1,
+            anchorY: 0,
+            x: winSize.width - 5,
+            y: winSize.height - 30,
+            scale: 1.5
+        });
+        this.score.textAlign = cc.TEXT_ALIGNMENT_RIGHT;
+        this.addChild(this.score);
         this.schedule(this.update, 1);
+        this.schedule(this.updateUI, 0.1);
         this.addTouchListener()
     },
 
@@ -27,9 +40,17 @@ var GameWindow = cc.Layer.extend({
                 var location = touch.getLocation();
                 cc.log(location.x);
                 cc.log(location.y);
+                var i;
                 for(i = 0; i < MW.CONTAINER.FIRES.length; i++){
                     if(self.isTouch(MW.CONTAINER.FIRES[i], location)){
                         MW.CONTAINER.FIRES[i].y = -100;
+                        if(MW.CONTAINER.FIRES[i].type == 1){
+                            self.scoreCounter();
+                        }else{
+                            cc.log("Game Over");
+                            MW.SCORE = self.tmpScore;
+                            cc.director.runScene(GameOver.scene());
+                        }
                         return true;
                     }
                 }
@@ -56,7 +77,6 @@ var GameWindow = cc.Layer.extend({
             newFire = Fire.createFire(1);
         }
         this.count++;
-        this.updateUI();
         this.addChild(newFire);
     },
 
@@ -77,6 +97,11 @@ var GameWindow = cc.Layer.extend({
             cc.log("--- TOUCH ---");
             return true;
         }
+    },
+
+    scoreCounter:function(){
+        this.tmpScore += 1;
+        this.score.setString("Score: " + this.tmpScore);
     }
 });
 
