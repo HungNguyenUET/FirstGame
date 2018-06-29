@@ -2,7 +2,7 @@
  * Created by CPU11084_LOCAL on 6/22/2018.
  */
 var Fire = cc.Sprite.extend({
-    speech: 50,
+    speech: 30,
     type:null,
     ctor:function(arg){
         this._super("#00.png");
