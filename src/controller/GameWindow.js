@@ -15,7 +15,8 @@ var GameWindow = cc.Layer.extend({
         this.initBackground();
         MW.CONTAINER.FIRES = [];
         winSize = cc.director.getWinSize();
-        this.schedule(this.update, 1);
+        this.scheduleUpdate();
+        this.schedule(this.updateUI, 1);
         this.addTouchListener()
     },
 
@@ -47,7 +48,7 @@ var GameWindow = cc.Layer.extend({
         this.addChild(background);
     },
 
-    update:function(){
+    updateUI:function(){
         cc.log("----- UPDATE -----");
         var newFire;
         if(this.count % 6 == 0){
@@ -60,7 +61,7 @@ var GameWindow = cc.Layer.extend({
         this.addChild(newFire);
     },
 
-    updateUI:function(){
+    update:function(){
         var i;
         for(i = 0; i < MW.CONTAINER.FIRES.length; i++){
             var currentFire = MW.CONTAINER.FIRES[i];
