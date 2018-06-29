@@ -68,7 +68,7 @@ var GameWindow = cc.Layer.extend({
         this.addChild(background);
     },
 
-    updateUI:function(){
+    update:function(){
         cc.log("----- UPDATE -----");
         var newFire;
         if(this.count % 6 == 0){
@@ -80,7 +80,7 @@ var GameWindow = cc.Layer.extend({
         this.addChild(newFire);
     },
 
-    update:function(){
+    updateUI:function(){
         var i;
         for(i = 0; i < MW.CONTAINER.FIRES.length; i++){
             var currentFire = MW.CONTAINER.FIRES[i];
