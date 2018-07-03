@@ -21,13 +21,17 @@ var Slime = cc.Sprite.extend({
 
 Slime.createSlime = function(){
     var newSlime = new Slime();
+    var positionX = Math.random()*winSize.width;
+    var positionY = Math.random()*winSize.height;
+    if(positionY < MW.PADDING_TOP){
+        positionY += MW.PADDING_TOP;
+    }
     newSlime.attr({
         anchorX: 0,
         anchorY: 0,
-        x: Math.random()*winSize.width - newSlime.width,
-        y: Math.random()*winSize.height - newSlime.height
+        x:  positionX,
+        y:  positionY
     });
     MW.CONTAINER.SLIMES.push(newSlime);
-    cc.log("--- CREATE SLIME ---");
     return newSlime;
 };

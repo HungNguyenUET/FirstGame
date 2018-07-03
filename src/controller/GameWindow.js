@@ -3,6 +3,7 @@
  */
 MAX_CONTAINT_WIDTH = 40;
 MAX_CONTAINT_HEIGHT = 40;
+var total_fire = 0;
 
 var GameWindow = cc.Layer.extend({
     count: 0,
@@ -22,19 +23,20 @@ var GameWindow = cc.Layer.extend({
         cc.log(winSize.width);
         this.initBackground(winSize);
         MW.CONTAINER.FIRES = [];
-        this.score = new cc.LabelBMFont("Score: 0", "res/arial-14.fnt");
+        this.score = new cc.LabelBMFont("0", "res/fonts/number_1.fnt");
         this.score.attr({
             anchorX: 1,
             anchorY: 0,
-            x: winSize.width - 5,
-            y: winSize.height - 30,
+            x: winSize.width - this.score.width,
+            y: winSize.height - this.score.height,
             scale: 1.5
         });
         this.score.textAlign = cc.TEXT_ALIGNMENT_RIGHT;
         this.addChild(this.score);
         this.schedule(this.update, 1);
         this.schedule(this.updateUI, 0.1);
-        this.addTouchListener()
+        this.addTouchListener();
+        cc.audioEngine.playMusic(cc.sys.os == cc.sys.OS_WP8 || cc.sys.os == cc.sys.OS_WINRT ? res.bgMusic_wav : res.bgMusic_mp3, true);
     },
 
     collide:function (a, b) {
@@ -59,12 +61,18 @@ var GameWindow = cc.Layer.extend({
                 for(i = 0; i < MW.CONTAINER.FIRES.length; i++){
                     if(self.isTouch(MW.CONTAINER.FIRES[i], location)){
                         MW.CONTAINER.FIRES[i].y = -100;
+                        MW.CONTAINER.FIRES[i].active = false;
                         if(MW.CONTAINER.FIRES[i].type == 1){
+                            cc.audioEngine.playEffect(cc.sys.os == cc.sys.OS_WINDOWS ||
+                            cc.sys.os == cc.sys.OS_WINRT ? res.fireEffect_wav : res.fireEffect_mp3);
                             self.scoreCounter();
                         }else{
+                            cc.audioEngine.stopMusic();
+                            cc.audioEngine.stopAllEffects();
                             cc.log("Game Over");
                             MW.SCORE = self.tmpScore;
                             cc.director.runScene(GameOver.scene());
+                            cc.log(total_fire);
                         }
                         return true;
                     }
@@ -92,18 +100,35 @@ var GameWindow = cc.Layer.extend({
     },
 
     update:function(){
-        cc.log("----- UPDATE -----");
         var newFire;
         var newSlime;
-        if(this.count % 6 == 0){
-            newFire = Fire.createFire(2);
-            newSlime = Slime.createSlime();
-            this.addChild(newSlime);
+        if(total_fire < MAX_FIRE){
+            if(this.count % 6 == 0){
+                newFire = Fire.createFire(2);
+                newSlime = Slime.createSlime();
+                this.addChild(newSlime);
+            }else{
+                newFire = Fire.createFire(1);
+            }
+            this.addChild(newFire);
+            this.count++;
         }else{
-            newFire = Fire.createFire(1);
+            for(var i = 0; i < MW.CONTAINER.FIRES.length; i++){
+                var curFire =  MW.CONTAINER.FIRES[i];
+                if(curFire.active == false){
+                    curFire.active = true;
+                    var positionX = Math.random()*winSize.width;
+                    var positionY = Math.random()*winSize.height;
+                    curFire.attr({
+                        anchorX: 0,
+                        anchorY: 0,
+                        x: positionX,
+                        y: positionY
+                    });
+                    break;
+                }
+            }
         }
-        this.count++;
-        this.addChild(newFire);
     },
 
     updateUI:function(){
@@ -113,7 +138,9 @@ var GameWindow = cc.Layer.extend({
             if(currentFire.x > winSize.width || currentFire.x < 0){
                 currentFire.speech *= -1;
             }
-            currentFire.x += currentFire.speech;
+            if(currentFire.active == true) {
+                currentFire.x += currentFire.speech;
+            }
         }
         for(i = 0; i < MW.CONTAINER.SLIMES.length; i++){
             var currentSlime = MW.CONTAINER.SLIMES[i];
@@ -126,8 +153,8 @@ var GameWindow = cc.Layer.extend({
     },
 
     isTouch:function(obj, location){
-        if(location.x > obj.x && location.x < (obj.x + obj.width) &&
-            location.y > obj.y && location.y < (obj.y + obj.height)){
+        if(location.x > obj.x && location.x < (obj.x + obj.width*2) &&
+            location.y > obj.y && location.y < (obj.y + obj.height*2)){
             cc.log("--- TOUCH ---");
             return true;
         }
@@ -135,7 +162,7 @@ var GameWindow = cc.Layer.extend({
 
     scoreCounter:function(){
         this.tmpScore += 1;
-        this.score.setString("Score: " + this.tmpScore);
+        this.score.setString(this.tmpScore);
     }
 });
 

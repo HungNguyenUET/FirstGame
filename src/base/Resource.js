@@ -3,7 +3,13 @@ var res = {
         fire1_png: 'res/fire1.png',
         fire2_plist: 'res/fire2.plist',
         fire2_png: 'res/fire2.png',
-        slime_plist: 'res/slime.plist'
+        slime_plist: 'res/slime.plist',
+        bgMusic_mp3: 'res/Music/bgMusic.mp3',
+        bgMusic_wav: 'res/Music/bgMusic.wav',
+        bgMusic_ogg: 'res/Music/bgMusic.ogg',
+        fireEffect_mp3: 'res/Music/fireEffect.mp3',
+        fireEffect_ogg: 'res/Music/fireEffect.ogg',
+        fireEffect_wav: 'res/Music/fireEffect.wav'
 };
 res.base = {};
 //FONT
