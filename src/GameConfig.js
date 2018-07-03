@@ -6,5 +6,6 @@ var MW = MW || {};
 MW.CONTAINER = {
   FIRES:[],
   SCORE:0,
-  SLIMES:[]
+  SLIMES:[],
+  PADDING_TOP: 1000
 };
