@@ -23,6 +23,10 @@ var res = {
 };
 
 var g_resources = [
+    res.fire1_plist,
+    res.fire1_png,
+    res.fire2_plist,
+    res.fire2_png,
     "CloseNormal.png",
     "CloseSelected.png",
     "game/animation/character/chipu/skeleton.xml",
@@ -37,7 +41,6 @@ var g_resources = [
     "Default/Button_Disable.png",
     "Default/Button_Normal.png",
     "Default/Button_Press.png",
-
     "favicon.ico",
     "HelloWorld.png",
     "fonts/diceNumber.fnt",

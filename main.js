@@ -49,22 +49,24 @@
 var gv = gv || {};
 
 cc.game.onStart = function () {
-    cc.view.enableRetina(false);
-    cc.view.adjustViewPort(true);
-    cc.view.setDesignResolutionSize(1920,1080,cc.ResolutionPolicy.SHOW_ALL);
-    cc.view.resizeWithBrowserSize(true);
-    cc.director.setProjection(cc.Director.PROJECTION_2D);
-    if (cc.sys.isNative) {
-        var searchPaths = jsb.fileUtils.getSearchPaths();
-        searchPaths.push('script');
-        if (cc.sys.os == cc.sys.OS_IOS || cc.sys.os == cc.sys.OS_OSX) {
-            searchPaths.push("res");
-            searchPaths.push("src");
-        }
-        jsb.fileUtils.setSearchPaths(searchPaths);
-    }
+    //var a = 10;
+    //cc.view.enableRetina(false);
+    //cc.view.adjustViewPort(true);
+    cc.view.setDesignResolutionSize(1920,1080,cc.ResolutionPolicy.FIXED_HEIGHT);
+    //cc.view.resizeWithBrowserSize(true);
+    //cc.director.setProjection(cc.Director.PROJECTION_2D);
+    //if (cc.sys.isNative) {
+    //    var searchPaths = jsb.fileUtils.getSearchPaths();
+    //    searchPaths.push('script');
+    //    if (cc.sys.os == cc.sys.OS_IOS || cc.sys.os == cc.sys.OS_OSX) {
+    //        searchPaths.push("res");
+    //        searchPaths.push("src");
+    //    }
+    //    jsb.fileUtils.setSearchPaths(searchPaths);
+    //}
     cc.LoaderScene.preload(g_resources, function () {
         cc.director.runScene(GameWindow.scene());
     }, this);
 };
+
 cc.game.run();

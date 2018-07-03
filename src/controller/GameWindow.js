@@ -1,6 +1,9 @@
 /**
  * Created by CPU11084_LOCAL on 6/22/2018.
  */
+MAX_CONTAINT_WIDTH = 40;
+MAX_CONTAINT_HEIGHT = 40;
+
 var GameWindow = cc.Layer.extend({
     count: 0,
     score: null,
@@ -12,11 +15,13 @@ var GameWindow = cc.Layer.extend({
 
     init:function(){
         this.count = 1;
-        cc.spriteFrameCache.addSpriteFrames("res/fire1.plist");
-        cc.spriteFrameCache.addSpriteFrames("res/fire2.plist");
-        this.initBackground();
-        MW.CONTAINER.FIRES = [];
+        cc.spriteFrameCache.addSpriteFrames(res.fire1_plist);
+        cc.spriteFrameCache.addSpriteFrames(res.fire2_plist);
+        cc.spriteFrameCache.addSpriteFrames(res.slime_plist);
         winSize = cc.director.getWinSize();
+        cc.log(winSize.width);
+        this.initBackground(winSize);
+        MW.CONTAINER.FIRES = [];
         this.score = new cc.LabelBMFont("Score: 0", "res/arial-14.fnt");
         this.score.attr({
             anchorX: 1,
@@ -30,6 +35,16 @@ var GameWindow = cc.Layer.extend({
         this.schedule(this.update, 1);
         this.schedule(this.updateUI, 0.1);
         this.addTouchListener()
+    },
+
+    collide:function (a, b) {
+        var ax = a.x, ay = a.y, bx = b.x, by = b.y;
+        if (Math.abs(ax - bx) > MAX_CONTAINT_WIDTH || Math.abs(ay - by) > MAX_CONTAINT_HEIGHT)
+            return false;
+
+        var aRect = a.collideRect(ax, ay);
+        var bRect = b.collideRect(bx, by);
+        return cc.rectIntersectsRect(aRect, bRect);
     },
 
     addTouchListener: function() {
@@ -54,16 +69,24 @@ var GameWindow = cc.Layer.extend({
                         return true;
                     }
                 }
+                for(i = 0; i < MW.CONTAINER.SLIMES.length; i++){
+                    if(self.isTouch(MW.CONTAINER.SLIMES[i], location)){
+                        MW.CONTAINER.SLIMES[i].y = -100;
+                        return true;
+                    }
+                }
                 return true;
             }
         }, this);
     },
 
-    initBackground: function(){
+    initBackground: function(winSize){
         var background = new cc.Sprite("res/game_background.png");
         background.attr({
-            anchorX: 0,
-            anchorY: 0
+            anchorX: 0.5,
+            anchorY: 0.5,
+            x: winSize.width/2,
+            y: winSize.height/2
         });
         this.addChild(background);
     },
@@ -71,8 +94,11 @@ var GameWindow = cc.Layer.extend({
     update:function(){
         cc.log("----- UPDATE -----");
         var newFire;
+        var newSlime;
         if(this.count % 6 == 0){
             newFire = Fire.createFire(2);
+            newSlime = Slime.createSlime();
+            this.addChild(newSlime);
         }else{
             newFire = Fire.createFire(1);
         }
@@ -89,11 +115,19 @@ var GameWindow = cc.Layer.extend({
             }
             currentFire.x += currentFire.speech;
         }
+        for(i = 0; i < MW.CONTAINER.SLIMES.length; i++){
+            var currentSlime = MW.CONTAINER.SLIMES[i];
+            if(currentSlime.x > winSize.width || currentFire.x < 0){
+                currentSlime.speech *= -1;
+                currentSlime.scaleX *= -1;
+            }
+            currentSlime.x += currentSlime.speech;
+        }
     },
 
-    isTouch:function(fire, location){
-        if(location.x > fire.x && location.x < (fire.x + fire.width) &&
-            location.y > fire.y && location.y < (fire.y + fire.height)){
+    isTouch:function(obj, location){
+        if(location.x > obj.x && location.x < (obj.x + obj.width) &&
+            location.y > obj.y && location.y < (obj.y + obj.height)){
             cc.log("--- TOUCH ---");
             return true;
         }

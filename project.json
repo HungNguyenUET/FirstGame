@@ -21,6 +21,7 @@
         "src/controller/GameOver.js",
         "src/GameConfig.js",
         "src/model/Fire.js",
+        "src/model/Slime.js",
         "src/controller/GameWindow.js",
         "src/data/Resource.js",
         "src/data/ResourceAnimation.js",

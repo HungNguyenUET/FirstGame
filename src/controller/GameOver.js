@@ -22,8 +22,10 @@ var GameOver = cc.Layer.extend({
     initBackground:function(){
         var background = new cc.Sprite("res/game_over.png");
         background.attr({
-            anchorX: 0,
-            anchorY: 0
+            anchorX: 0.5,
+            anchorY: 0.5,
+            x: winSize.width/2,
+            y: winSize.height/2
         });
         this.addChild(background);
     }
