@@ -52,7 +52,7 @@ cc.game.onStart = function () {
     //var a = 10;
     //cc.view.enableRetina(false);
     //cc.view.adjustViewPort(true);
-    cc.view.setDesignResolutionSize(1920,1080,cc.ResolutionPolicy.FIXED_HEIGHT);
+    cc.view.setDesignResolutionSize(1000,1000,cc.ResolutionPolicy.FIXED_HEIGHT);
     //cc.view.resizeWithBrowserSize(true);
     //cc.director.setProjection(cc.Director.PROJECTION_2D);
     //if (cc.sys.isNative) {
